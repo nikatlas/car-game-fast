@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="BasicShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206572199" remote="130571254800000000" />
+<file name="BleachBypassShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206582199" remote="130571254800000000" />
+<file name="BlendShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206582199" remote="130571254800000000" />
+<file name="BokehShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206582199" remote="130571254800000000" />
+<file name="BokehShader2.js" server="schooliki.gr//public_html/cargame/" local="130568199206592200" remote="130571254800000000" />
+<file name="BrightnessContrastShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206592200" remote="130571254800000000" />
+<file name="ColorCorrectionShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206602201" remote="130571254800000000" />
+<file name="ColorifyShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206602201" remote="130571254800000000" />
+<file name="ConvolutionShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206602201" remote="130571254800000000" />
+<file name="CopyShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206602201" remote="130571254800000000" />
+<file name="DigitalGlitch.js" server="schooliki.gr//public_html/cargame/" local="130568199206612201" remote="130571254800000000" />
+<file name="DOFMipMapShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206612201" remote="130571254800000000" />
+<file name="DotScreenShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206612201" remote="130571254800000000" />
+<file name="EdgeShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206622202" remote="130571254800000000" />
+<file name="EdgeShader2.js" server="schooliki.gr//public_html/cargame/" local="130568199206622202" remote="130571254800000000" />
+<file name="FilmShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206622202" remote="130571255400000000" />
+<file name="FocusShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206632202" remote="130571255400000000" />
+<file name="FresnelShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206632202" remote="130571255400000000" />
+<file name="FXAAShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206622202" remote="130571255400000000" />
+<file name="HorizontalBlurShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206632202" remote="130571255400000000" />
+<file name="HorizontalTiltShiftShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206642203" remote="130571255400000000" />
+<file name="HueSaturationShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206642203" remote="130571255400000000" />
+<file name="KaleidoShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206642203" remote="130571255400000000" />
+<file name="LuminosityShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206652203" remote="130571255400000000" />
+<file name="MirrorShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206652203" remote="130571255400000000" />
+<file name="NormalMapShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206652203" remote="130571255400000000" />
+<file name="OceanShaders.js" server="schooliki.gr//public_html/cargame/" local="130568199206662204" remote="130571255400000000" />
+<file name="RGBShiftShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206662204" remote="130571255400000000" />
+<file name="SepiaShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206662204" remote="130571255400000000" />
+<file name="SSAOShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206662204" remote="130571255400000000" />
+<file name="TechnicolorShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206672205" remote="130571255400000000" />
+<file name="TriangleBlurShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206672205" remote="130571256000000000" />
+<file name="UnpackDepthRGBAShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206672205" remote="130571256000000000" />
+<file name="VerticalBlurShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206682205" remote="130571256000000000" />
+<file name="VerticalTiltShiftShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206682205" remote="130571256000000000" />
+<file name="VignetteShader.js" server="schooliki.gr//public_html/cargame/" local="130568199206682205" remote="130571256000000000" />
+</dwsync>

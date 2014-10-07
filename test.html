@@ -1,0 +1,119 @@
+<html>
+
+<head>
+		<script src="js/three.min.js"></script>
+
+		<script src="js/loaders/DDSLoader.js"></script>
+		<script src="js/loaders/MTLLoader.js"></script>
+		<script src="js/loaders/OBJMTLLoader.js"></script>
+
+		<script src="js/Detector.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+<script >
+var car;
+window.onload = function (){
+      var renderer = new THREE.WebGLRenderer({ antialias: false});
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+      
+      var scene = new THREE.Scene();
+
+      var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+
+      camera.position.z = -200;
+      camera.position.y = 200;
+      camera.lookAt({x:0,y:0,z:0});
+      scene.add(camera);
+
+      var cube = new THREE.Mesh(new THREE.CubeGeometry(50, 50, 50), new THREE.MeshLambertMaterial({color: 0xCC0000}));
+      cube.position.y = 0;
+      scene.add(cube);
+      
+      //plane = new THREE.Mesh(new THREE.CubeGeometry(200,200,3), new THREE.MeshLambertMaterial({color: 0x22FF11}));
+      //scene.add(plane);
+	  // FLOOR 
+				// material
+				var texture = THREE.ImageUtils.loadTexture( 'textures/grass_1.jpg' );
+				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set( 50, 50 );
+
+			    // cube
+				var material = new THREE.MeshLambertMaterial( {
+				   color: 0x11ff11,
+				   specular:0x11ff11,
+				   shininess: 5,
+				   map: texture,
+				   combine: THREE.MixOperation,
+				   reflectivity: 0.05
+				} );
+				var plane = new THREE.Mesh(new THREE.CubeGeometry(500, 1, 500), material);
+				plane.position.y = -10;
+		    	scene.add(plane);
+
+
+      scene.add( new THREE.AmbientLight( 0xCCCCCC) );
+      
+      var light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.x = 100;
+      light.position.y = 150;
+	  light.position.z = 10
+      scene.add(light);
+
+      renderer.shadowMapEnabled = true;
+      renderer.shadowMapSoft = false;
+
+      renderer.shadowCameraNear = 3;
+      renderer.shadowCameraFar = camera.far;
+      renderer.shadowCameraFov = 50;
+
+      renderer.shadowMapBias = 0.0039;
+      renderer.shadowMapDarkness = 0.2;
+      renderer.shadowMapWidth = 1024;
+      renderer.shadowMapHeight = 1024;
+
+		var loader = new THREE.OBJMTLLoader();
+				loader.load( 'obj/350z/untitled.obj', 'obj/350z/untitled.mtl', function ( object ) {
+					object.position.y = 50;
+					object.scale.x = 
+					object.scale.y =
+					object.scale.z = 50;
+					object.rotation.x = 1;
+					object.rotation.z = 0;
+					object.castShadow = true;
+					object.receiveShadow = false;
+					/*object.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh ) {
+							//child.material.ambient.r=child.material.ambient.b=child.material.ambient.g=0.2;
+							//child.castShadow = true;
+							//child.receiveShadow = true;
+						}
+					} );*/
+					scene.add( object );
+					car = object;
+				} );
+				
+
+      light.castShadow = true;
+      cube.castShadow = true;
+      plane.receiveShadow = true;
+      
+      renderer.render(scene, camera);
+	  			requestAnimationFrame( animate );
+
+	  function animate() {
+	
+			requestAnimationFrame( animate );
+			render();
+			
+		}
+		
+		function render() {
+	
+			renderer.render( scene, camera );
+		}
+}
+</script>
+</head>
+<body>
+</body>
+</html>

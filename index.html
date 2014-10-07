@@ -36,11 +36,15 @@
 		<script src="js/loaders/MTLLoader.js"></script>
 		<script src="js/loaders/OBJMTLLoader.js"></script>
 
+
 		<script src="js/Detector.js"></script>
 		<script src="js/libs/stats.min.js"></script>
 
 		<script>
-			var MAX_VELOCITY = 200000, MAX_ANGULAR_VELOCITY = 1000, LINEAR_TO_ANGULAR = 30;
+			var MAX_VELOCITY = 2000000, MAX_ANGULAR_VELOCITY = 5000, LINEAR_TO_ANGULAR = 30,FIELD_SIZE = 1000,WALL_HEIGHT=100;
+			
+			var SHADOW_MAP_WIDTH = 2048, SHADOW_MAP_HEIGHT = 2048;
+
 			var container, stats;
 
 			var camera, scene, renderer;
@@ -50,68 +54,243 @@
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 		
-			var cube,car;
+			var cube,car,test,circuit;
+			var walls = [];
 			var clock = new THREE.Clock(true);
 			var keys = [];
+			
+			var updateFcts	= [];
 			
 			init();
 			animate();
 
 
 			function init() {
-
+				
+				
+				renderer = new THREE.WebGLRenderer({ antialias: true});
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+				/*
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
+				*/
 
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.y = 10;
-				camera.position.z = 10;
+				//////////////////////////////////////////////////////////////////////////////////
+				//		use stats.js - optional						//
+				//////////////////////////////////////////////////////////////////////////////////	
+				var stats	= new Stats();
+				stats.domElement.style.position	= 'absolute';
+				stats.domElement.style.right	= '0px';
+				stats.domElement.style.bottom	= '0px';
+				document.body.appendChild( stats.domElement );
+				updateFcts.push(function(delta, now){
+					stats.update();
+				});
 
+
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.y = 400;
+				camera.position.z = 400;
+				camera.lookAt(new THREE.Vector3(0,0,0));
+				
 				// scene
 
 				scene = new THREE.Scene();
 
-				var ambient = new THREE.AmbientLight( 0xbbbbbb );
+				var ambient = new THREE.AmbientLight( 0xffffff );
 				scene.add( ambient );
 
-				var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-				directionalLight.position.set( 0, 0, 1 ).normalize();
+				var directionalLight = new THREE.SpotLight( 0xffffff , 1 , 0, 0 , 1);
+				directionalLight.position.set( -1500, 500, -1500 );			
+				directionalLight.lookAt(new THREE.Vector3(0,0,0));	
 				scene.add( directionalLight );
 				
-				directionalLight = new THREE.DirectionalLight( 0xffeedd );
-				directionalLight.position.set( 1, 1, 0 ).normalize();
-				scene.add( directionalLight );
+				// create a SpotLight
+				//light = new THREE.SpotLight( 0xffffff, 1, 0, Math.PI / 2, 1 );
+				//light.position.set( 0, 1500, 1000 );
+				//light.target.position.set( 0, 0, 0 );
+				//scene.add( light );
+					  
 
+				// test
+				material = new THREE.MeshLambertMaterial( {
+				   color: 0xCC0000	} );
+				test = new THREE.Mesh(new THREE.BoxGeometry(15, 15, 15), material);
+				test.position.y = 4;
+		    	//scene.add(test);
+				
 				// FLOOR 
 				// material
 				var texture = THREE.ImageUtils.loadTexture( 'textures/grass_1.jpg' );
 				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-				texture.repeat.set( 20, 20 );
+				texture.repeat.set( 50, 50 );
 
 			    // cube
-				material = new THREE.MeshPhongMaterial( {
-				   color: 0xffffff,
-				   specular:0xffffff,
-				   shininess: 2222,
+				var material = new THREE.MeshLambertMaterial( {
+				   color: 0x11ff11,
+				   specular:0x11ff11,
+				   shininess: 5,
 				   map: texture,
+ 		   		   shading		: THREE.SmoothShading,
 				   combine: THREE.MixOperation,
 				   reflectivity: 0.05
 				} );
-				cube = new THREE.Mesh(new THREE.CubeGeometry(50, 1, 50), material);
-		    	cube.overdraw = true;
+				var cube = new THREE.Mesh(new THREE.BoxGeometry(FIELD_SIZE, 1, FIELD_SIZE), material);
 				cube.position.y = 0;
 		    	scene.add(cube);
 				
+				//*/ WALLS - - -- - -- - -- - --
+				// wall material
+				var texture = THREE.ImageUtils.loadTexture( 'textures/wall_1.jpg' );
+				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set( 50, 8 );
+			    // Wall texture
+				material = new THREE.MeshLambertMaterial( {
+				   color: 0xffffff,
+				   specular:0xffffff,
+				   shininess: 5,
+				   map: texture,
+			   		shading		: THREE.SmoothShading,
+				   combine: THREE.MixOperation,
+				   reflectivity: 0.05
+				} );
 				
+				//* Wall Back
+				walls[0] = new THREE.Mesh(new THREE.BoxGeometry(FIELD_SIZE, WALL_HEIGHT, 5), material);
+				walls[0].position.y = -5;
+				walls[0].position.x = -FIELD_SIZE/2;
+				walls[0].rotation.y = Math.PI/2;
+				// Wall front
+				walls[1] = new THREE.Mesh(new THREE.BoxGeometry(FIELD_SIZE, WALL_HEIGHT, 5), material);
+				walls[1].position.y = -5;
+				walls[1].position.x = FIELD_SIZE/2;				
+				walls[1].rotation.y = Math.PI/2;
+				// Wall Right
+				walls[2] = new THREE.Mesh(new THREE.BoxGeometry(FIELD_SIZE, WALL_HEIGHT, 5), material);
+				walls[2].position.z = FIELD_SIZE/2;
+				walls[2].position.y = -5;
+				// Wall left
+				walls[3] = new THREE.Mesh(new THREE.BoxGeometry(FIELD_SIZE, WALL_HEIGHT, 5), material);
+				walls[3].position.y = -5;
+				walls[3].position.z = -FIELD_SIZE/2;
+				walls[3].rotation = 0;
+				
+				for(var i = 0 ; i < 4; i ++ )
+					scene.add(walls[i]);
+				
+				// END WALLS - -- - -- - - -- 
+				//////////////////////////////////////////////////////////////////////
+				
+				// Random Balls Creation 
+				
+				
+				
+				
+				//* SkyBox 
+				var cubeMap = new THREE.CubeTexture( [] );
+				cubeMap.format = THREE.RGBFormat;
+				cubeMap.flipY = false;
+
+				var loader = new THREE.ImageLoader();
+				loader.load( 'textures/Skybox/sky.png', function ( image ) {
+
+					var getSide = function ( x, y ) {
+
+						var size = 1024;
+
+						var canvas = document.createElement( 'canvas' );
+						canvas.width = size;
+						canvas.height = size;
+
+						var context = canvas.getContext( '2d' );
+						context.drawImage( image, - x * size, - y * size );
+
+						return canvas;
+
+					};
+
+					cubeMap.images[ 0 ] = getSide( 2, 1 ); // px
+					cubeMap.images[ 1 ] = getSide( 0, 1 ); // nx
+					cubeMap.images[ 2 ] = getSide( 1, 0 ); // py
+					cubeMap.images[ 3 ] = getSide( 1, 2 ); // ny
+					cubeMap.images[ 4 ] = getSide( 1, 1 ); // pz
+					cubeMap.images[ 5 ] = getSide( 3, 1 ); // nz
+					cubeMap.needsUpdate = true;
+
+				} );
+				var cubeShader = THREE.ShaderLib['cube'];
+				cubeShader.uniforms['tCube'].value = cubeMap;
+				var skyBoxMaterial = new THREE.ShaderMaterial( {
+					fragmentShader: cubeShader.fragmentShader,
+					vertexShader: cubeShader.vertexShader,
+					uniforms: cubeShader.uniforms,
+					depthWrite: false,
+					side: THREE.BackSide
+				});
+				var skyBox = new THREE.Mesh(
+					new THREE.BoxGeometry( 1000, 1000, 1000 ),
+					skyBoxMaterial
+				);
+				scene.add( skyBox );
+				//END ADD SKYBOX
+				var loader = new THREE.OBJMTLLoader();
+				/*
+				loader.load( 'obj/car-circuit/Circuit.obj', 'obj/car-circuit/Circuit.mtl', function ( object ) {
+					object.position.x = -100;
+					object.position.z = -100;
+					object.scale.x = 
+					object.scale.y = 1;
+					object.scale.z = -1;
+					object.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh ) {
+							//child.material.ambient.r=child.material.ambient.b=child.material.ambient.g=0.2;
+							//child.castShadow = true;
+							//child.receiveShadow = true;
+						}
+					} );
+					scene.add( object );
+					circuit = object;				
+				} );
+				*/
 				// model
 				THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
-				//*
-				var loader = new THREE.OBJMTLLoader();
-				loader.load( 'obj/lamborgini/Avent.obj', 'obj/lamborgini/Avent.mtl', function ( object ) {
-					object.position.y = 0.45;
+				
+				/*
+				var loader = new THREE.ColladaLoader();
+				var localObject;
+				loader.options.convertUpAxis = true;
+				loader.load( 'obj/lamborgini/Avent.dae', function colladaReady( collada ) {
+					localObject = collada.scene;
+					localObject.scale.x = localObject.scale.y = localObject.scale.z = 15;
+					localObject.updateMatrix();
+					car = localObject;
+					car.velocity = 0;
+					car.angularVelocity = 0;
+					car.acc = 0;
+					car.brake = MAX_VELOCITY;
+					car.angularBrake = MAX_ANGULAR_VELOCITY;
+					car.applyResistance = function (){
+						this.velocity += -this.velocity/100;
+						if( !keys[65] && !keys[68] ) {
+							car.angularVelocity /= 1.3;	
+						}
+					}
+	   				scene.add(car); 
+				} );
+				/*/
+				loader.load( 'obj/car-circuit/Car.obj', 'obj/car-circuit/Car.mtl', function ( object ) {
+					object.position.y = 0.1;
 					object.scale.x = 
 					object.scale.y =
-					object.scale.z = 1;
+					object.scale.z = 3;
+					object.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh ) {
+							//child.material.ambient.r=child.material.ambient.b=child.material.ambient.g=0.2;
+							child.castShadow = true;
+							//child.receiveShadow = true;
+						}
+					} );
 					scene.add( object );
 					car = object;				
 					car.velocity = 0;
@@ -144,17 +323,26 @@
 					}
 				} );
 				//*/
-
-				renderer = new THREE.WebGLRenderer();
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
-
-				//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				
+			    renderer.shadowMapEnabled = true;
+				renderer.shadowMapType = THREE.PCFSoftShadowMap;
+				
+				directionalLight.shadowBias = 0.0;
+				directionalLight.shadowCameraFov = 45;
+				directionalLight.shadowDarkness = 0.5;	
+			
+				
+				directionalLight.castShadow = true;
+				test.castShadow = true;
+				cube.receiveShadow = true;
+				for( var i = 0 ; i < walls.length ; i ++ ) {
+					walls[i].castShadow = true;	
+					walls[i].receiveShadow = true;	
+				}
+				
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				document.addEventListener( 'keydown', onKeyboardDown, false );
 				document.addEventListener( 'keyup', onKeyboardUp, false );
-
-				//
-
 				window.addEventListener( 'resize', onWindowResize, false );
 
 			}
@@ -284,28 +472,38 @@
 						
 						car.rotation.y += - LINEAR_TO_ANGULAR * car.velocity / MAX_VELOCITY * car.angularVelocity * dt * 0.001;
 						
-						var vector = new THREE.Vector3( 1, 0, 0 )
+						var vector = new THREE.Vector3( 0, 0, -1 )
 						var axis = new THREE.Vector3( 0, 1, 0 );
 						var angle = car.rotation.y;
 						var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
 						vector.applyMatrix4( matrix );
 
-						car.position.x += car.velocity*dt * 0.001 * vector.x;
-						car.position.z += car.velocity*dt * 0.001 * vector.z;
+						car.position.x += car.velocity*dt * 0.001 *  vector.x;
+						car.position.z += car.velocity*dt * 0.001 *  vector.z;
 
 						car.applyResistance(dt);
-						camera.position.x = car.position.x + 10*vector.x;
-						camera.position.y = car.position.y + 10*vector.y + 5;
-						camera.position.z = car.position.z + 10*vector.z;
+						camera.position.x = car.position.x + 20*vector.x ; //* (vector.x - camera.position.x) ; 
+						camera.position.y = 10;
+						camera.position.z = car.position.z + 20*vector.z;
 						
 						camera.lookAt( car.position  );
 						
 					}	
 			}
-			function animate() {
+			var lastTimeMsec = 0;
+			function animate(nowMsec) {
 
 				requestAnimationFrame( animate );
 				render();
+				
+				// measure time
+				lastTimeMsec	= lastTimeMsec || nowMsec-1000/60;
+				var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec);
+				lastTimeMsec	= nowMsec;
+				// call each update function
+				updateFcts.forEach(function(updateFn){
+					updateFn(deltaMsec/1000, nowMsec/1000);
+				})
 				
 			}
 			

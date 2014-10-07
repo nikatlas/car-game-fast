@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="CSS2DRenderer.js" server="schooliki.gr//public_html/cargame/" local="130568199206542197" remote="130571254200000000" />
+<file name="CSS3DRenderer.js" server="schooliki.gr//public_html/cargame/" local="130568199206542197" remote="130571254200000000" />
+<file name="RaytracingRenderer.js" server="schooliki.gr//public_html/cargame/" local="130568199206552198" remote="130571254200000000" />
+<file name="SoftwareRenderer.js" server="schooliki.gr//public_html/cargame/" local="130568199206562198" remote="130571254200000000" />
+<file name="SVGRenderer.js" server="schooliki.gr//public_html/cargame/" local="130568199206552198" remote="130571254200000000" />
+<file name="WebGLDeferredRenderer.js" server="schooliki.gr//public_html/cargame/" local="130568199206572199" remote="130571254200000000" />
+<file name="WebGLRenderer3.js" server="schooliki.gr//public_html/cargame/" local="130568199206572199" remote="130571254200000000" />
+</dwsync>
